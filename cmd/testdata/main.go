@@ -14,7 +14,7 @@ import (
 
 func init() {
 	logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
-		Level: slog.LevelInfo,
+		Level: slog.LevelWarn,
 	}))
 	slog.SetDefault(logger)
 }
@@ -70,19 +70,9 @@ func printDocumentNode(node *html.Node) {
 
 func printElementNode(node *html.Node) {
 	slog.Info("printElementNode: Entry", "data", node.Data)
-	startTag := "<"
-	startTag += node.Data
-	for _, attr := range node.Attr {
-		startTag += fmt.Sprintf(" %s=%q", attr.Key, attr.Val)
+	for child := node.FirstChild; child != nil; child = child.NextSibling {
+		printNode(child)
 	}
-	startTag += ">"
-	fmt.Println(startTag)
-	if node.Data != "script" {
-		for child := node.FirstChild; child != nil; child = child.NextSibling {
-			printNode(child)
-		}
-	}
-	fmt.Printf("</%s>\n", node.Data)
 	slog.Info("printElementNode: Exit")
 
 }
