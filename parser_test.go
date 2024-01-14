@@ -178,3 +178,108 @@ func Test_getAttribute(t *testing.T) {
 		})
 	}
 }
+
+func Test_getURL(t *testing.T) {
+	wikiNode := func() *html.Node {
+
+		// Create elements (without yet links to others)
+		elemRoot := &html.Node{}
+		elemA := &html.Node{
+			Type: html.ElementNode,
+			Data: `a`,
+			Attr: []html.Attribute{
+				{
+					Key: `href`,
+					Val: `/url?q=https://en.wikipedia.org/wiki/Test-driven_development&amp;sa=U`,
+				},
+				{
+					Key: `data-ved`,
+					Val: `2ahUKEwjOvI2Xid2DAxV8M1kFHczQAXwQFnoECAoQAg`,
+				},
+			},
+		}
+		elemDiv1 := &html.Node{
+			Type: html.ElementNode,
+			Data: `div`,
+			Attr: []html.Attribute{
+				{
+					Key: `class`,
+					Val: `DnJfK`,
+				},
+			},
+		}
+		elemDiv2 := &html.Node{
+			Type: html.ElementNode,
+			Data: `div`,
+			Attr: []html.Attribute{
+				{
+					Key: `class`,
+					Val: `j039Wc`,
+				},
+			},
+		}
+		elemDiv3 := &html.Node{
+			Type: html.ElementNode,
+			Data: `div`,
+			Attr: []html.Attribute{
+				{
+					Key: `class`,
+					Val: `BNeawe vvjwJb AP7Wnd`,
+				},
+			},
+		}
+		elemH3 := &html.Node{
+			Type: html.ElementNode,
+			Data: `h3`,
+			Attr: []html.Attribute{
+				{
+					Key: `class`,
+					Val: `zBAuLc l97dzf`,
+				},
+			},
+		}
+
+		elemRoot.FirstChild = elemA
+		elemRoot.LastChild = elemA
+
+		elemA.Parent = elemRoot
+		elemA.FirstChild = elemDiv1
+		elemA.LastChild = elemDiv1
+
+		elemDiv1.Parent = elemA
+		elemDiv1.FirstChild = elemDiv2
+		elemDiv2.LastChild = elemDiv2
+
+		elemDiv2.Parent = elemDiv1
+		elemDiv2.FirstChild = elemDiv3
+		elemDiv2.LastChild = elemDiv3
+
+		elemDiv3.Parent = elemDiv2
+		elemDiv3.FirstChild = elemH3
+		elemDiv3.LastChild = elemH3
+
+		return elemRoot
+	}
+	tests := []struct {
+		name string
+		node *html.Node
+		want string
+	}{
+		{
+			name: "empty",
+			node: &html.Node{},
+		},
+		{
+			name: "wikipedia",
+			node: wikiNode(),
+			want: `/url?q=https://en.wikipedia.org/wiki/Test-driven_development&amp;sa=U`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			want := tt.want
+			have := getURL(tt.node)
+			assert.Equal(t, want, have)
+		})
+	}
+}
