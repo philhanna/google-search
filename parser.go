@@ -41,7 +41,7 @@ func (doc *HTMLDoc) parse() error {
 	if err != nil {
 		return err
 	}
-	err = handleElementNode(elemRoot)
+	err = doc.handleElementNode(elemRoot)
 	if err != nil {
 		return err
 	}
@@ -51,17 +51,20 @@ func (doc *HTMLDoc) parse() error {
 // handleElementNode extracts a link from the specified node, if it has
 // one, then recursively applies the same function to all its
 // descendants
-func handleElementNode(elem *html.Node) error {
+func (doc *HTMLDoc) handleElementNode(elem *html.Node) error {
 	if elem.Data == "div" {
 		class := getAttribute(elem, "class")
 		if isLinkDiv(class) {
-			_ = class
+			link := doc.getLink(elem)
+			if link != nil {
+				doc.Links = append(doc.Links, *link)	
+			}
 		}
 	}
 	for child := elem.FirstChild; child != nil; child = child.NextSibling {
 		switch child.Type {
 		case html.ElementNode:
-			handleElementNode(child)
+			doc.handleElementNode(child)
 		}
 	}
 	return nil
@@ -75,6 +78,12 @@ func getAttribute(node *html.Node, key string) string {
 		}
 	}
 	return ""
+}
+
+// getLink starts from a <div> statement and extracts the Link
+// it contains, if any
+func (doc *HTMLDoc) getLink(node *html.Node) *Link {
+	return nil
 }
 
 // isLinkDiv returns true if the specified class string indicates that
