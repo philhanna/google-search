@@ -44,41 +44,41 @@ func main() {
 		slog.Error(errmsg)
 		os.Exit(1)
 	}
-	printNode(doc)
+	handleElementNode(doc)
 }
 
-func printNode(node *html.Node) {
-	slog.Info("printNode: Entry", "type", node.Type)
-	switch node.Type {
-	case html.DocumentNode:
-		printDocumentNode(node)
-	case html.ElementNode:
-		printElementNode(node)
-	case html.TextNode:
-		printTextNode(node)
+func handleElementNode(node *html.Node) {
+	if node.Data == "div" {
+		class := getAttribute(node, "class")
+		if isLinkDiv(class) {
+			elemA := node.FirstChild
+			if hasURL(elemA) {
+				href := getAttribute(elemA, "href")
+				fmt.Printf("DEBUG: %v\n", href)
+			}
+		}
 	}
-	slog.Info("printNode: Exit")
-}
-
-func printDocumentNode(node *html.Node) {
-	slog.Info("printDocumentNode: Entry", "data", node.Data)
 	for child := node.FirstChild; child != nil; child = child.NextSibling {
-		printNode(child)
+		switch child.Type {
+		case html.ElementNode:
+			handleElementNode(child)
+		}
 	}
-	slog.Info("printDocumentNode: Exit")
 }
 
-func printElementNode(node *html.Node) {
-	slog.Info("printElementNode: Entry", "data", node.Data)
-	for child := node.FirstChild; child != nil; child = child.NextSibling {
-		printNode(child)
-	}
-	slog.Info("printElementNode: Exit")
-
+func isLinkDiv(class string) bool {
+	return strings.Contains(class, "egMi0") && strings.Contains(class, "kCrYT")
 }
 
-func printTextNode(node *html.Node) {
-	slog.Info("printTextNode: Entry", "text", node.Data)
-	fmt.Printf("%s\n", node.Data)
-	slog.Info("printTextNode: Exit")
+func hasURL(node *html.Node) bool {
+	return node.Data == "a"
+}
+
+func getAttribute(node *html.Node, key string) string {
+	for _, attr := range node.Attr {
+		if attr.Key == key {
+			return attr.Val
+		}
+	}
+	return ""
 }
