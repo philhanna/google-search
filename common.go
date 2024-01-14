@@ -1,9 +1,11 @@
 package search
 
-import "os"
+import (
+	"path/filepath"
+	"runtime"
+)
 
-var DocumentRoot string
-
-func init() {
-	DocumentRoot, _ = os.Getwd()
-}
+var (
+	_, b, _, _  = runtime.Caller(0)
+	ProjectRoot = filepath.Dir(b)
+)
