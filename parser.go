@@ -34,17 +34,13 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 	return p, err
 }
 
-// parse is an internal method called by the constructor that builds the
-// list of links in this document
-func (doc *HTMLDoc) parse() error {
-	elemRoot, err := html.Parse(strings.NewReader(doc.HTML))
-	if err != nil {
-		return err
-	}
-	err = doc.handleElementNode(elemRoot)
-	if err != nil {
-		return err
-	}
+// ---------------------------------------------------------------------
+// Methods
+// ---------------------------------------------------------------------
+
+// getLink starts from a <div> statement and extracts the Link
+// it contains, if any
+func (doc *HTMLDoc) getLink(node *html.Node) *Link {
 	return nil
 }
 
@@ -70,6 +66,24 @@ func (doc *HTMLDoc) handleElementNode(elem *html.Node) error {
 	return nil
 }
 
+// parse is an internal method called by the constructor that builds the
+// list of links in this document
+func (doc *HTMLDoc) parse() error {
+	elemRoot, err := html.Parse(strings.NewReader(doc.HTML))
+	if err != nil {
+		return err
+	}
+	err = doc.handleElementNode(elemRoot)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ---------------------------------------------------------------------
+// Functions
+// ---------------------------------------------------------------------
+
 // getAttribute returns the value of the specified attribute in a node
 func getAttribute(node *html.Node, key string) string {
 	for _, attr := range node.Attr {
@@ -78,6 +92,13 @@ func getAttribute(node *html.Node, key string) string {
 		}
 	}
 	return ""
+}
+
+// getTitle returns the title of the link associated with this <div>, if
+// there is one.
+func getTitle(node *html.Node) string {
+	var title string
+	return title
 }
 
 // getURL returns the URL associated with this link <div>, if there is
@@ -91,15 +112,8 @@ func getURL(node *html.Node) string {
 	return url
 }
 
-// getLink starts from a <div> statement and extracts the Link
-// it contains, if any
-func (doc *HTMLDoc) getLink(node *html.Node) *Link {
-	return nil
-}
-
 // isLinkDiv returns true if the specified class string indicates that
 // this is a <div> that contains a link
 func isLinkDiv(class string) bool {
 	return strings.Contains(class, "egMi0") && strings.Contains(class, "kCrYT")
 }
-
