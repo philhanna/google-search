@@ -46,7 +46,13 @@ func printDocumentNode(node *html.Node) {
 }
 
 func printElementNode(node *html.Node) {
-	fmt.Printf("%s<%s>\n", indent(), node.Data)
+	startTag := indent() + "<"
+	startTag += node.Data
+	for _, attr := range node.Attr {
+		startTag += fmt.Sprintf(" %s=%q", attr.Key, attr.Val)
+	}
+	startTag += ">"
+	fmt.Println(startTag)
 	level++
 	for child := node.FirstChild; child != nil; child = child.NextSibling {
 		printNode(child)
