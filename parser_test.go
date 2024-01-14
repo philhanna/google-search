@@ -154,7 +154,7 @@ func Test_getAttribute(t *testing.T) {
 					{Key: "href", Val: "foo"},
 				},
 			},
-			key: "href",
+			key:  "href",
 			want: "foo",
 		},
 		{
@@ -166,7 +166,7 @@ func Test_getAttribute(t *testing.T) {
 					{Key: "href", Val: "foo"},
 				},
 			},
-			key: "href",
+			key:  "href",
 			want: "foo",
 		},
 	}
