@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/html"
 )
 
 var testdataCache = make(map[string]string)
@@ -112,16 +113,16 @@ func Test_isLinkDiv(t *testing.T) {
 			name: "empty",
 		},
 		{
-			name: `good`,
+			name:  `good`,
 			class: `<div class="egMi0 kCrYT">`,
-			want: true,
+			want:  true,
 		},
 		{
-			name: `bad`,
+			name:  `bad`,
 			class: `<div>`,
 		},
 		{
-			name: `partial`,
+			name:  `partial`,
 			class: `<div class="kCrYT">`,
 		},
 	}
@@ -129,6 +130,50 @@ func Test_isLinkDiv(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			want := tt.want
 			have := isLinkDiv(tt.class)
+			assert.Equal(t, want, have)
+		})
+	}
+}
+
+func Test_getAttribute(t *testing.T) {
+	tests := []struct {
+		name string
+		node *html.Node
+		key  string
+		want string
+	}{
+		{
+			name: "empty",
+			node: &html.Node{},
+		},
+		{
+			name: "Good",
+			node: &html.Node{
+				Data: "a",
+				Attr: []html.Attribute{
+					{Key: "href", Val: "foo"},
+				},
+			},
+			key: "href",
+			want: "foo",
+		},
+		{
+			name: "2nd attribute",
+			node: &html.Node{
+				Data: "a",
+				Attr: []html.Attribute{
+					{Key: "class", Val: "something"},
+					{Key: "href", Val: "foo"},
+				},
+			},
+			key: "href",
+			want: "foo",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			want := tt.want
+			have := getAttribute(tt.node, tt.key)
 			assert.Equal(t, want, have)
 		})
 	}
