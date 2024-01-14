@@ -87,12 +87,13 @@ func TestParse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			want := tt.want
-			have, err := Parse(tt.html)
+			doc, err := NewHTMLDoc(tt.html)
 			if tt.wantErr {
 				assert.NotNil(t, err)
 				return
 			}
+			want := tt.want
+			have := doc.Links
 			assert.Greater(t, len(have), 0)
 			for i := 0; i < len(have); i++ {
 				assert.Equal(t, want[i], have[i])
