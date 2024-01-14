@@ -80,6 +80,17 @@ func getAttribute(node *html.Node, key string) string {
 	return ""
 }
 
+// getURL returns the URL associated with this link <div>, if there is
+// one
+func getURL(node *html.Node) string {
+	var url string
+	elemA := node.FirstChild
+	if elemA != nil {
+		url = getAttribute(elemA, "href")
+	}
+	return url
+}
+
 // getLink starts from a <div> statement and extracts the Link
 // it contains, if any
 func (doc *HTMLDoc) getLink(node *html.Node) *Link {
