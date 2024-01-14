@@ -34,6 +34,8 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 	return p, err
 }
 
+// parse is an internal method called by the constructor that builds the
+// list of links in this document
 func (doc *HTMLDoc) parse() error {
 	elemRoot, err := html.Parse(strings.NewReader(doc.HTML))
 	if err != nil {
@@ -46,6 +48,9 @@ func (doc *HTMLDoc) parse() error {
 	return nil
 }
 
+// handleElementNode extracts a link from the specified node, if it has
+// one, then recursively applies the same function to all its
+// descendants
 func handleElementNode(elem *html.Node) error {
 	if elem.Data == "div" {
 		class := getAttribute(elem, "class")
@@ -62,6 +67,7 @@ func handleElementNode(elem *html.Node) error {
 	return nil
 }
 
+// getAttribute returns the value of the specified attribute in a node
 func getAttribute(node *html.Node, key string) string {
 	for _, attr := range node.Attr {
 		if attr.Key == key {
@@ -71,6 +77,8 @@ func getAttribute(node *html.Node, key string) string {
 	return ""
 }
 
+// isLinkDiv returns true if the specified class string indicates that
+// this is a <div> that contains a link
 func isLinkDiv(class string) bool {
 	return strings.Contains(class, "egMi0") && strings.Contains(class, "kCrYT")
 }
