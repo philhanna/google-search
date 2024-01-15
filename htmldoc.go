@@ -31,6 +31,24 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 		return nil, err
 	}
 	p.Root = d
+
+	// Parse the document for links
+	for h3 := range p.getH3s() {
+		
+		// Get the URL
+		urlPtr := getURL(h3)
+		if urlPtr == nil {
+			continue
+		}
+		
+		// Get the title associated with the <h3>
+		title := h3.FirstChild.Data
+
+		link := makeLink(*urlPtr, title)
+		if link != nil {
+			p.Links = append(p.Links, *link)
+		}
+	}
 	return p, nil
 }
 
