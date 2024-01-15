@@ -1,10 +1,12 @@
 package search
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -199,3 +201,17 @@ func Test_getURL(t *testing.T) {
 	}
 }
 */
+
+func TestHTMLDoc_getH3s(t *testing.T) {
+	input := getTestHTML("a.html")
+	doc, err := NewHTMLDoc(input)
+	assert.Nil(t, err)
+	count := 0
+	for h3 := range doc.getH3s() {
+		// Get the title associated with the <h3>
+		title := strings.TrimSpace(h3.FirstChild.Data)
+		fmt.Printf("%p: %s\n", h3, title)
+		count++
+	}
+	assert.Equal(t, 9, count)
+}

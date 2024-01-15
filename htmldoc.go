@@ -38,6 +38,22 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 // Methods
 // ---------------------------------------------------------------------
 
+// getH3s is an iterator over the H3 elements in the document.
+func (doc *HTMLDoc) getH3s() chan *html.Node {
+	ch := make(chan *html.Node)
+	go func() {
+		defer close(ch)
+		for x := range walk(doc.Root) {
+			if x.Type == html.ElementNode {
+				if x.Data == `h3` {
+					ch <- x
+				}
+			}
+		}
+	}()
+	return ch
+}
+
 // ---------------------------------------------------------------------
 // Functions
 // ---------------------------------------------------------------------
@@ -51,4 +67,33 @@ func getAttribute(node *html.Node, name string) string {
 		}
 	}
 	return ""
+}
+/*
+// getChildren returns a slice of all the direct children of the
+// specified node
+func getChildren(node *html.Node) []*html.Node {
+	children := make([]*html.Node, 0)
+	for child := node.FirstChild; child != nil; child = child.NextSibling {
+		children = append(children, child)
+	}
+	return children
+}
+*/
+
+func getDescendants(node *html.Node, ch chan *html.Node) {
+	for child := node.FirstChild; child != nil; child = child.NextSibling {
+		ch <- child
+		getDescendants(child, ch)
+	}
+}
+
+// walk is an iterator that walks through all the nodes in the
+// document, depth first
+func walk(node *html.Node) chan *html.Node {
+	ch := make(chan *html.Node)
+	go func(node *html.Node) {
+		defer close(ch)
+		getDescendants(node, ch)
+	}(node)
+	return ch
 }
