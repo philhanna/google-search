@@ -34,13 +34,13 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 
 	// Parse the document for links
 	for h3 := range p.getH3s() {
-		
+
 		// Get the URL
 		urlPtr := getURL(h3)
 		if urlPtr == nil {
 			continue
 		}
-		
+
 		// Get the title associated with the <h3>
 		title := h3.FirstChild.Data
 

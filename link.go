@@ -22,7 +22,7 @@ func (link *Link) String() string {
 
 // makeLink creates a Link object from a URL and title
 func makeLink(url, title string) *Link {
-	
+
 	// Sanitize the URL
 	const prefix = `/url?q=`
 	url = strings.TrimPrefix(url, prefix)
@@ -41,7 +41,7 @@ func makeLink(url, title string) *Link {
 
 	// Done
 	return &Link{
-		URL: url,
+		URL:   url,
 		Title: title,
 	}
 }

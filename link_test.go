@@ -27,8 +27,8 @@ func Test_makeLink(t *testing.T) {
 			},
 		},
 		{
-			name: "No sanitization required",
-			url:  `http://www.philhanna.net`,
+			name:  "No sanitization required",
+			url:   `http://www.philhanna.net`,
 			title: `JSP 2.0 - The Complete Reference`,
 			want: &Link{
 				URL:   `http://www.philhanna.net`,
@@ -36,8 +36,8 @@ func Test_makeLink(t *testing.T) {
 			},
 		},
 		{
-			name:    "empty",
-			want:    &Link{URL: "", Title: ""},
+			name: "empty",
+			want: &Link{URL: "", Title: ""},
 		},
 	}
 	for _, tt := range tests {
