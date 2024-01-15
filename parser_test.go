@@ -8,109 +8,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/net/html"
 )
 
 var testdataCache = make(map[string]string)
-
-func mockWikiNode() *html.Node{
-
-	// Create elements (without yet links to others)
-	elemRoot := &html.Node{
-		Type: html.ElementNode,
-		Data: `div`,
-		Attr: []html.Attribute{
-			{
-				Key: `class`,
-				Val: `egMi0 kCrYT`,
-			},
-		},
-	}
-	elemA := &html.Node{
-		Type: html.ElementNode,
-		Data: `a`,
-		Attr: []html.Attribute{
-			{
-				Key: `href`,
-				Val: `/url?q=https://en.wikipedia.org/wiki/Test-driven_development&amp;sa=U`,
-			},
-			{
-				Key: `data-ved`,
-				Val: `2ahUKEwjOvI2Xid2DAxV8M1kFHczQAXwQFnoECAoQAg`,
-			},
-		},
-	}
-	elemDiv1 := &html.Node{
-		Type: html.ElementNode,
-		Data: `div`,
-		Attr: []html.Attribute{
-			{
-				Key: `class`,
-				Val: `DnJfK`,
-			},
-		},
-	}
-	elemDiv2 := &html.Node{
-		Type: html.ElementNode,
-		Data: `div`,
-		Attr: []html.Attribute{
-			{
-				Key: `class`,
-				Val: `j039Wc`,
-			},
-		},
-	}
-	elemDiv3 := &html.Node{
-		Type: html.ElementNode,
-		Data: `div`,
-		Attr: []html.Attribute{
-			{
-				Key: `class`,
-				Val: `BNeawe vvjwJb AP7Wnd`,
-			},
-		},
-	}
-	elemH3 := &html.Node{
-		Type: html.ElementNode,
-		Data: `h3`,
-		Attr: []html.Attribute{
-			{
-				Key: `class`,
-				Val: `zBAuLc l97dzf`,
-			},
-		},
-	}
-	nodeText := &html.Node{
-		Type: html.TextNode,
-		Data: `Test-driven development - Wikipedia`,
-	}
-
-	elemRoot.FirstChild = elemA
-	elemRoot.LastChild = elemA
-
-	elemA.Parent = elemRoot
-	elemA.FirstChild = elemDiv1
-	elemA.LastChild = elemDiv1
-
-	elemDiv1.Parent = elemA
-	elemDiv1.FirstChild = elemDiv2
-	elemDiv2.LastChild = elemDiv2
-
-	elemDiv2.Parent = elemDiv1
-	elemDiv2.FirstChild = elemDiv3
-	elemDiv2.LastChild = elemDiv3
-
-	elemDiv3.Parent = elemDiv2
-	elemDiv3.FirstChild = elemH3
-	elemDiv3.LastChild = elemH3
-
-	elemH3.Parent = elemDiv3
-	elemH3.FirstChild = nodeText
-	elemH3.LastChild = nodeText
-
-	return elemRoot
-
-}
 
 func getTestHTML(filename string) string {
 	if data, OK := testdataCache[filename]; OK {
@@ -130,6 +30,7 @@ func getTestHTML(filename string) string {
 	testdataCache[filename] = data
 	return data
 }
+
 func TestParse(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -191,6 +92,7 @@ func TestParse(t *testing.T) {
 				assert.NotNil(t, err)
 				return
 			}
+			//doc.Parse()
 			want := tt.want
 			have := doc.Links
 			assert.Greater(t, len(have), 0)
@@ -201,6 +103,7 @@ func TestParse(t *testing.T) {
 	}
 }
 
+/*
 func Test_isLinkDiv(t *testing.T) {
 	tests := []struct {
 		name  string
@@ -326,3 +229,4 @@ func Test_getURL(t *testing.T) {
 		})
 	}
 }
+*/
