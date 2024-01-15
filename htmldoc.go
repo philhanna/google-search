@@ -1,6 +1,8 @@
 package search
 
 import (
+	"io"
+	"net/http"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -16,11 +18,41 @@ type HTMLDoc struct {
 	Root  *html.Node // Root of the parsed document tree
 }
 
+var (
+    // Downloader is a variable pointing to a function that performs the
+    // HTTP GET request and returns a string of HTML. This variable can
+    // be overridden with another function pointer for unit testing
+    // purposes. 
+	Downloader = func(query string) (string, error) {
+		resp, err := http.Get(query)
+		if err != nil {
+			return "", err
+		}
+		byteData, _ := io.ReadAll(resp.Body)
+		return string(byteData), nil
+	}
+
+    // DefaultDownloader makes it possible to restore the original
+    // Downloader variable
+	DefaultDownloader = Downloader
+)
 // ---------------------------------------------------------------------
 // Constuctors
 // ---------------------------------------------------------------------
 
-//func Download(query string) (*HTMLDoc, error)
+// Download accepts a query and passes it to Google search, and returns
+// the HTML created by Google.  The function that performs the HTTP Get
+// is pointed to by the Downloader variable, so it is possible to mock
+// it with an object that supplies HTML from a local source.
+func Download(query string) (*HTMLDoc, error) {
+	inputHTML, err := Downloader(query)
+	if err != nil {
+		return nil, err
+	}
+	doc := NewHTMLDoc(inputHTML)
+	return doc, nil
+}
+
 // NewHTMLDoc creates a new HTML document with the specified HTML data,
 // parses it for links, and returns a pointer to it
 func NewHTMLDoc(input string) *HTMLDoc {
