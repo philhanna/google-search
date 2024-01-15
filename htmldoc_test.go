@@ -155,8 +155,15 @@ func TestNewHTMLDoc(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "empty",
-			wantErr: true,
+			name: "empty",
+		},
+		{
+			name: "Good",
+			input: getTestHTML("a.html"),
+		},
+		{
+			name: "Bogus",
+			input: getTestHTML("bogus.html"),
 		},
 	}
 	for _, tt := range tests {
