@@ -146,3 +146,29 @@ func Test_getAttribute(t *testing.T) {
 		})
 	}
 }
+
+func TestNewHTMLDoc(t *testing.T) {
+	tests := []struct {
+		name    string
+		input   string
+		want    *HTMLDoc
+		wantErr bool
+	}{
+		{
+			name:    "empty",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			doc, err := NewHTMLDoc(tt.input)
+			if tt.wantErr {
+				assert.NotNil(t, err)
+				assert.Nil(t, doc)
+				return
+			}
+			assert.NotNil(t, doc)
+			assert.Nil(t, err)
+		})
+	}
+}
