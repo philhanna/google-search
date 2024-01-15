@@ -10,15 +10,10 @@ import (
 // Type Definitions
 // ---------------------------------------------------------------------
 
-type Link struct {
-	URL   string
-	Title string
-}
-
 type HTMLDoc struct {
-	HTML      string     // The HTML of the document
-	Links     []Link     // The links that the parser finds
-	ParsedDoc *html.Node // Root of the parsed document tree
+	HTML  string     // The HTML of the document
+	Links []Link     // The links that the parser finds
+	Root  *html.Node // Root of the parsed document tree
 }
 
 // ---------------------------------------------------------------------
@@ -35,6 +30,25 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 	if err != nil {
 		return nil, err
 	}
-	p.ParsedDoc = d
+	p.Root = d
 	return p, nil
+}
+
+// ---------------------------------------------------------------------
+// Methods
+// ---------------------------------------------------------------------
+
+// ---------------------------------------------------------------------
+// Functions
+// ---------------------------------------------------------------------
+
+// getAttribute returns the value of the specified key in the specified
+// node
+func getAttribute(node *html.Node, name string) string {
+	for _, attr := range node.Attr {
+		if attr.Key == name {
+			return attr.Val
+		}
+	}
+	return ""
 }

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/html"
 )
 
 var testdataCache = make(map[string]string)
@@ -103,39 +104,6 @@ func TestParse(t *testing.T) {
 	}
 }
 
-/*
-func Test_isLinkDiv(t *testing.T) {
-	tests := []struct {
-		name  string
-		class string
-		want  bool
-	}{
-		{
-			name: "empty",
-		},
-		{
-			name:  `good`,
-			class: `<div class="egMi0 kCrYT">`,
-			want:  true,
-		},
-		{
-			name:  `bad`,
-			class: `<div>`,
-		},
-		{
-			name:  `partial`,
-			class: `<div class="kCrYT">`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			want := tt.want
-			have := isLinkDiv(tt.class)
-			assert.Equal(t, want, have)
-		})
-	}
-}
-
 func Test_getAttribute(t *testing.T) {
 	tests := []struct {
 		name string
@@ -179,7 +147,7 @@ func Test_getAttribute(t *testing.T) {
 		})
 	}
 }
-
+/*
 func Test_getTitle(t *testing.T) {
 	tests := []struct {
 		name string
