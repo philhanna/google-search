@@ -20,9 +20,10 @@ type HTMLDoc struct {
 // Constuctors
 // ---------------------------------------------------------------------
 
+//func Download(query string) (*HTMLDoc, error)
 // NewHTMLDoc creates a new HTML document with the specified HTML data,
 // parses it for links, and returns a pointer to it
-func NewHTMLDoc(input string) (*HTMLDoc, error) {
+func NewHTMLDoc(input string) *HTMLDoc {
 	p := new(HTMLDoc)
 	p.HTML = input
 	p.Links = make([]Link, 0)
@@ -46,7 +47,7 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 			p.Links = append(p.Links, *link)
 		}
 	}
-	return p, nil
+	return p
 }
 
 // ---------------------------------------------------------------------

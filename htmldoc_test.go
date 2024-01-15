@@ -37,7 +37,6 @@ func TestParse(t *testing.T) {
 		name    string
 		html    string
 		want    []Link
-		wantErr bool
 	}{
 		{
 			name: "test driven development",
@@ -88,11 +87,7 @@ func TestParse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			doc, err := NewHTMLDoc(tt.html)
-			if tt.wantErr {
-				assert.NotNil(t, err)
-				return
-			}
+			doc := NewHTMLDoc(tt.html)
 			want := tt.want
 			have := doc.Links
 			assert.Greater(t, len(have), 0)
@@ -152,7 +147,6 @@ func TestNewHTMLDoc(t *testing.T) {
 		name    string
 		input   string
 		want    *HTMLDoc
-		wantErr bool
 	}{
 		{
 			name: "empty",
@@ -168,14 +162,8 @@ func TestNewHTMLDoc(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			doc, err := NewHTMLDoc(tt.input)
-			if tt.wantErr {
-				assert.NotNil(t, err)
-				assert.Nil(t, doc)
-				return
-			}
+			doc := NewHTMLDoc(tt.input)
 			assert.NotNil(t, doc)
-			assert.Nil(t, err)
 		})
 	}
 }
