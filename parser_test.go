@@ -130,7 +130,6 @@ func getTestHTML(filename string) string {
 	testdataCache[filename] = data
 	return data
 }
-
 func TestParse(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -140,7 +139,7 @@ func TestParse(t *testing.T) {
 	}{
 		{
 			name: "test driven development",
-			html: getTestHTML("tdd.html"),
+			html: getTestHTML("a.html"),
 			want: []Link{
 				{
 					`https://en.wikipedia.org/wiki/Test-driven_development`,

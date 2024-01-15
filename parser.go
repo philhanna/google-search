@@ -1,6 +1,8 @@
 package search
 
 import (
+	"fmt"
+	"log/slog"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -41,6 +43,19 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 // getLink starts from a <div> statement and extracts the Link
 // it contains, if any
 func (doc *HTMLDoc) getLink(node *html.Node) *Link {
+	slog.Info(fmt.Sprintf("Node is %v", node))
+	url := getURL(node)
+	slog.Info(fmt.Sprintf("URL is %q", url))
+	title := getTitle(node)
+	slog.Info(fmt.Sprintf("Title is %q", title))
+	if url != "" {
+		if title != "" {
+			link := new(Link)
+			link.URL = url
+			link.Title = title
+			return link
+		}
+	}
 	return nil
 }
 
@@ -51,6 +66,7 @@ func (doc *HTMLDoc) handleElementNode(elem *html.Node) error {
 	if elem.Data == "div" {
 		class := getAttribute(elem, "class")
 		if isLinkDiv(class) {
+			slog.Info(`Entering handleElementNode for`, `class`, class)
 			link := doc.getLink(elem)
 			if link != nil {
 				doc.Links = append(doc.Links, *link)	
@@ -126,11 +142,25 @@ func getTitle(node *html.Node) string {
 // one
 func getURL(node *html.Node) string {
 	var url string
-	if node.FirstChild != nil && node.FirstChild.Data == `a` {
-		elemA := node.FirstChild
-		url = getAttribute(elemA, "href")
+	// Find the first <a> descendant
+	elemA := getDescendant(node, func(x *html.Node) bool {
+		return x.Type == html.ElementNode && x.Data == `a`
+	})
+	if elemA != nil {
+		url = getAttribute(elemA, `href`)
 	}
 	return url
+}
+
+func getDescendant(node *html.Node, meetsCriteria func (child *html.Node) bool) *html.Node {
+	child := node.FirstChild
+	if child == nil {
+		return nil
+	}
+	if meetsCriteria(child) {
+		return child
+	}
+	return getDescendant(child, meetsCriteria)
 }
 
 // isLinkDiv returns true if the specified class string indicates that
