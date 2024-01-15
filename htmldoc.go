@@ -26,10 +26,7 @@ func NewHTMLDoc(input string) (*HTMLDoc, error) {
 	p := new(HTMLDoc)
 	p.HTML = input
 	p.Links = make([]Link, 0)
-	d, err := html.Parse(strings.NewReader(p.HTML))
-	if err != nil {
-		return nil, err
-	}
+	d, _ := html.Parse(strings.NewReader(p.HTML))
 	p.Root = d
 
 	// Parse the document for links
