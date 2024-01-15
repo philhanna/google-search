@@ -158,11 +158,11 @@ func TestNewHTMLDoc(t *testing.T) {
 			name: "empty",
 		},
 		{
-			name: "Good",
+			name:  "Good",
 			input: getTestHTML("a.html"),
 		},
 		{
-			name: "Bogus",
+			name:  "Bogus",
 			input: getTestHTML("bogus.html"),
 		},
 	}
