@@ -98,6 +98,27 @@ func getAttribute(node *html.Node, key string) string {
 // there is one.
 func getTitle(node *html.Node) string {
 	var title string
+	if node.FirstChild != nil && node.FirstChild.Data == `a` {
+		elemA := node.FirstChild
+		if elemA.FirstChild != nil && elemA.FirstChild.Data == `div` {
+			elemDiv1 := elemA.FirstChild
+			if elemDiv1.FirstChild != nil && elemDiv1.FirstChild.Data == `div` {
+				elemDiv2 := elemDiv1.FirstChild
+				if elemDiv2.FirstChild != nil && elemDiv2.FirstChild.Data == `div` {
+					elemDiv3 := elemDiv2.FirstChild
+					if elemDiv3.FirstChild != nil && elemDiv3.FirstChild.Data == `h3` {
+						elemH3 := elemDiv3.FirstChild
+						if elemH3.FirstChild != nil {
+							nodeText := elemH3.FirstChild
+							title = nodeText.Data
+							title = strings.TrimSpace(title)
+							return title
+						}
+					}
+				}
+			}
+		}
+	}
 	return title
 }
 
@@ -105,8 +126,8 @@ func getTitle(node *html.Node) string {
 // one
 func getURL(node *html.Node) string {
 	var url string
-	elemA := node.FirstChild
-	if elemA != nil {
+	if node.FirstChild != nil && node.FirstChild.Data == `a` {
+		elemA := node.FirstChild
 		url = getAttribute(elemA, "href")
 	}
 	return url

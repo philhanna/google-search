@@ -16,7 +16,16 @@ var testdataCache = make(map[string]string)
 func mockWikiNode() *html.Node{
 
 	// Create elements (without yet links to others)
-	elemRoot := &html.Node{}
+	elemRoot := &html.Node{
+		Type: html.ElementNode,
+		Data: `div`,
+		Attr: []html.Attribute{
+			{
+				Key: `class`,
+				Val: `egMi0 kCrYT`,
+			},
+		},
+	}
 	elemA := &html.Node{
 		Type: html.ElementNode,
 		Data: `a`,
@@ -71,6 +80,10 @@ func mockWikiNode() *html.Node{
 			},
 		},
 	}
+	nodeText := &html.Node{
+		Type: html.TextNode,
+		Data: `Test-driven development - Wikipedia`,
+	}
 
 	elemRoot.FirstChild = elemA
 	elemRoot.LastChild = elemA
@@ -90,6 +103,10 @@ func mockWikiNode() *html.Node{
 	elemDiv3.Parent = elemDiv2
 	elemDiv3.FirstChild = elemH3
 	elemDiv3.LastChild = elemH3
+
+	elemH3.Parent = elemDiv3
+	elemH3.FirstChild = nodeText
+	elemH3.LastChild = nodeText
 
 	return elemRoot
 
@@ -261,31 +278,6 @@ func Test_getAttribute(t *testing.T) {
 	}
 }
 
-func Test_getURL(t *testing.T) {
-	tests := []struct {
-		name string
-		node *html.Node
-		want string
-	}{
-		{
-			name: "empty",
-			node: &html.Node{},
-		},
-		{
-			name: "wikipedia",
-			node: mockWikiNode(),
-			want: `/url?q=https://en.wikipedia.org/wiki/Test-driven_development&amp;sa=U`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			want := tt.want
-			have := getURL(tt.node)
-			assert.Equal(t, want, have)
-		})
-	}
-}
-
 func Test_getTitle(t *testing.T) {
 	tests := []struct {
 		name string
@@ -293,19 +285,44 @@ func Test_getTitle(t *testing.T) {
 		want string
 	}{
 		{
-			name: "empty",
-			node: &html.Node{},
-		},
-		{
 			name: "wikipedia",
 			node: mockWikiNode(),
 			want: `Test-driven development - Wikipedia`,
+		},
+		{
+			name: "empty",
+			node: &html.Node{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			want := tt.want
 			have := getTitle(tt.node)
+			assert.Equal(t, want, have)
+		})
+	}
+}
+
+func Test_getURL(t *testing.T) {
+	tests := []struct {
+		name string
+		node *html.Node
+		want string
+	}{
+		{
+			name: "wikipedia",
+			node: mockWikiNode(),
+			want: `/url?q=https://en.wikipedia.org/wiki/Test-driven_development&amp;sa=U`,
+		},
+		{
+			name: "empty",
+			node: &html.Node{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			want := tt.want
+			have := getURL(tt.node)
 			assert.Equal(t, want, have)
 		})
 	}
