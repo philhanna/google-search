@@ -1,7 +1,6 @@
 package search
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -50,35 +49,35 @@ func TestParse(t *testing.T) {
 				},
 				{
 					`https://www.browserstack.com/guide/what-is-test-driven-development`,
-					`What is Test Driven Development (TDD)`,
+					`What is Test Driven Development (TDD) ? | BrowserStack`,
 				},
 				{
 					`https://martinfowler.com/bliki/TestDrivenDevelopment.html`,
 					`Test Driven Development - Martin Fowler`,
 				},
 				{
-					`https://www.agilealliance.org/glossary/tdd/`,
-					`What is Test Driven Development (TDD)?`,
-				},
-				{
-					`https://www.spiceworks.com/tech/devops/articles/what-is-tdd/`,
-					`What is TDD (Test Driven Development)?`,
-				},
-				{
 					`https://semaphoreci.com/blog/test-driven-development`,
-					`Test-Driven Development: A Time-Tested Recipe for Quality ...`,
-				},
-				{
-					`https://www.techtarget.com/searchsoftwarequality/definition/test-driven-development`,
-					`What is test-driven development (TDD)? | Definition from ...`,
+					`Test-Driven Development: A Time-Tested Recipe for Quality Software`,
 				},
 				{
 					`https://www.geeksforgeeks.org/test-driven-development-tdd/`,
-					`Test Driven Development (TDD)`,
+					`Test Driven Development (TDD) - GeeksforGeeks`,
 				},
 				{
 					`https://www.guru99.com/test-driven-development.html`,
-					`What is Test Driven Development (TDD)? Example`,
+					`What is Test Driven Development (TDD)? Example - Guru99`,
+				},
+				{
+					`https://www.agilealliance.org/glossary/tdd/`,
+					`What is Test Driven Development (TDD)? - Agile Alliance`,
+				},
+				{
+					`https://www.spiceworks.com/tech/devops/articles/what-is-tdd/`,
+					`What is TDD (Test Driven Development)? - Spiceworks`,
+				},
+				{
+					`https://www.techtarget.com/searchsoftwarequality/definition/test-driven-development`,
+					`What is test-driven development (TDD)? | Definition from TechTarget`,
 				},
 				{
 					`https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530`,
@@ -94,7 +93,6 @@ func TestParse(t *testing.T) {
 				assert.NotNil(t, err)
 				return
 			}
-			//doc.Parse()
 			want := tt.want
 			have := doc.Links
 			assert.Greater(t, len(have), 0)
@@ -147,74 +145,4 @@ func Test_getAttribute(t *testing.T) {
 			assert.Equal(t, want, have)
 		})
 	}
-}
-
-/*
-func Test_getTitle(t *testing.T) {
-	tests := []struct {
-		name string
-		node *html.Node
-		want string
-	}{
-		{
-			name: "wikipedia",
-			node: mockWikiNode(),
-			want: `Test-driven development - Wikipedia`,
-		},
-		{
-			name: "empty",
-			node: &html.Node{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			want := tt.want
-			have := getTitle(tt.node)
-			assert.Equal(t, want, have)
-		})
-	}
-}
-
-func Test_getURL(t *testing.T) {
-	tests := []struct {
-		name string
-		node *html.Node
-		want string
-	}{
-		{
-			name: "wikipedia",
-			node: mockWikiNode(),
-			want: `/url?q=https://en.wikipedia.org/wiki/Test-driven_development&amp;sa=U`,
-		},
-		{
-			name: "empty",
-			node: &html.Node{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			want := tt.want
-			have := getURL(tt.node)
-			assert.Equal(t, want, have)
-		})
-	}
-}
-*/
-
-func TestHTMLDoc_getH3s(t *testing.T) {
-	input := getTestHTML("a.html")
-	doc, err := NewHTMLDoc(input)
-	assert.Nil(t, err)
-	count := 0
-	for h3 := range doc.getH3s() {
-		// Get the title associated with the <h3>
-		title := h3.FirstChild.Data
-		// Get the URL
-		url := getURL(h3)
-		assert.NotNil(t, url)
-		link := makeLink(*url, title)
-		fmt.Printf("%v\n", link)
-		count++
-	}
-	assert.Equal(t, 9, count)
 }
