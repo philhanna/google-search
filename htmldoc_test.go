@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -209,8 +208,12 @@ func TestHTMLDoc_getH3s(t *testing.T) {
 	count := 0
 	for h3 := range doc.getH3s() {
 		// Get the title associated with the <h3>
-		title := strings.TrimSpace(h3.FirstChild.Data)
-		fmt.Printf("%p: %s\n", h3, title)
+		title := h3.FirstChild.Data
+		// Get the URL
+		url := getURL(h3)
+		assert.NotNil(t, url)
+		link := makeLink(*url, title)
+		fmt.Printf("%v\n", link)
 		count++
 	}
 	assert.Equal(t, 9, count)
