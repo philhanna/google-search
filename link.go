@@ -1,7 +1,6 @@
 package search
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -14,11 +13,6 @@ type Link struct {
 var (
 	reSpaces = regexp.MustCompile(`\s+`)
 )
-
-// String creates a string representation of the specified Link struct
-func (link *Link) String() string {
-	return fmt.Sprintf("Link:url=%s,title=%s", link.URL, link.Title)
-}
 
 // makeLink creates a Link object from a URL and title
 func makeLink(url, title string) *Link {
