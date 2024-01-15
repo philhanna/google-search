@@ -68,22 +68,35 @@ func getAttribute(node *html.Node, name string) string {
 	}
 	return ""
 }
-/*
-// getChildren returns a slice of all the direct children of the
-// specified node
-func getChildren(node *html.Node) []*html.Node {
-	children := make([]*html.Node, 0)
-	for child := node.FirstChild; child != nil; child = child.NextSibling {
-		children = append(children, child)
-	}
-	return children
-}
-*/
 
 func getDescendants(node *html.Node, ch chan *html.Node) {
 	for child := node.FirstChild; child != nil; child = child.NextSibling {
 		ch <- child
 		getDescendants(child, ch)
+	}
+}
+
+// getURL finds the URL for the specified <h3>
+//
+// Once an <h3> has been found, the title will be in the first child that is a text node.
+// To find the corresponding URL, the following algorithm is used:
+//
+//  1. Find the first ancestor that is an HTML element with a tag of `a`.
+//  2. If no such ancestor exists, return nil
+//  3. Return the value of the `href` attribute
+func getURL(node *html.Node) *string {
+	for {
+		if node == nil {
+			return nil
+		}
+		if node.Type == html.ElementNode && node.Data == `a` {
+			href := getAttribute(node, `href`)
+			if href == "" {
+				return nil
+			}
+			return &href
+		}
+		node = node.Parent
 	}
 }
 
