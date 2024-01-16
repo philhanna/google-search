@@ -3,6 +3,7 @@ package search
 import (
 	"io"
 	"net/http"
+	urn "net/url"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -19,12 +20,12 @@ type HTMLDoc struct {
 }
 
 var (
-    // Downloader is a variable pointing to a function that performs the
-    // HTTP GET request and returns a string of HTML. This variable can
-    // be overridden with another function pointer for unit testing
-    // purposes. 
-	Downloader = func(query string) (string, error) {
-		resp, err := http.Get(query)
+	// Downloader is a variable pointing to a function that performs the
+	// HTTP GET request and returns a string of HTML. This variable can
+	// be overridden with another function pointer for unit testing
+	// purposes.
+	Downloader = func(url string) (string, error) {
+		resp, err := http.Get(url)
 		if err != nil {
 			return "", err
 		}
@@ -32,10 +33,11 @@ var (
 		return string(byteData), nil
 	}
 
-    // DefaultDownloader makes it possible to restore the original
-    // Downloader variable
+	// DefaultDownloader makes it possible to restore the original
+	// Downloader variable
 	DefaultDownloader = Downloader
 )
+
 // ---------------------------------------------------------------------
 // Constuctors
 // ---------------------------------------------------------------------
@@ -45,7 +47,9 @@ var (
 // is pointed to by the Downloader variable, so it is possible to mock
 // it with an object that supplies HTML from a local source.
 func Download(query string) (*HTMLDoc, error) {
-	inputHTML, err := Downloader(query)
+	url := "https://www.google.com/search?q="
+	url += urn.QueryEscape(query)
+	inputHTML, err := Downloader(url)
 	if err != nil {
 		return nil, err
 	}
