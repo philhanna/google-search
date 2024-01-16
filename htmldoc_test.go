@@ -170,7 +170,7 @@ func TestNewHTMLDoc(t *testing.T) {
 }
 
 func TestDownload(t *testing.T) {
-	const query = `lichess ben finegold`
+	const query = `lichess ben finegold site:lichess.org`
 	doc, err := Download(query)
 	assert.Nil(t, err)
 

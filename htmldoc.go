@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	GOOGLE_URL = "https://www.google.com/search?q="
 	UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 )
 
@@ -33,8 +34,9 @@ var (
 		if err != nil {
 			return "", err
 		}
-		req.Header.Set("User-Agent")
-		resp, err := http.Get(url)
+		req.Header.Set("User-Agent", UA)
+		client := new(http.Client)
+		resp, err := client.Do(req)
 		if err != nil {
 			return "", err
 		}
@@ -56,7 +58,7 @@ var (
 // is pointed to by the Downloader variable, so it is possible to mock
 // it with an object that supplies HTML from a local source.
 func Download(query string) (*HTMLDoc, error) {
-	url := "https://www.google.com/search?q="
+	url := GOOGLE_URL
 	url += urn.QueryEscape(query)
 	inputHTML, err := Downloader(url)
 	if err != nil {
