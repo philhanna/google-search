@@ -181,8 +181,8 @@ func TestDownload(t *testing.T) {
 
 	for _, link := range doc.Links {
 		parts := make([]string, 0)
-		parts = append(parts, "url=" + link.URL)
-		parts = append(parts, "title=" + link.Title)
+		parts = append(parts, "url="+link.URL)
+		parts = append(parts, "title="+link.Title)
 		line := strings.Join(parts, ",")
 		fp.WriteString(line + "\n")
 	}
