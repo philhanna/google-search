@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,9 +35,9 @@ func getTestHTML(filename string) string {
 
 func TestParse(t *testing.T) {
 	tests := []struct {
-		name    string
-		html    string
-		want    []Link
+		name string
+		html string
+		want []Link
 	}{
 		{
 			name: "test driven development",
@@ -144,9 +145,9 @@ func Test_getAttribute(t *testing.T) {
 
 func TestNewHTMLDoc(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   string
-		want    *HTMLDoc
+		name  string
+		input string
+		want  *HTMLDoc
 	}{
 		{
 			name: "empty",
@@ -165,5 +166,24 @@ func TestNewHTMLDoc(t *testing.T) {
 			doc := NewHTMLDoc(tt.input)
 			assert.NotNil(t, doc)
 		})
+	}
+}
+
+func TestDownload(t *testing.T) {
+	const query = `lichess ben finegold`
+	doc, err := Download(query)
+	assert.Nil(t, err)
+
+	filename := filepath.Join(os.TempDir(), "links.txt")
+	fp, err := os.Create(filename)
+	assert.Nil(t, err)
+	defer fp.Close()
+
+	for _, link := range doc.Links {
+		parts := make([]string, 0)
+		parts = append(parts, "url=" + link.URL)
+		parts = append(parts, "title=" + link.Title)
+		line := strings.Join(parts, ",")
+		fp.WriteString(line + "\n")
 	}
 }
