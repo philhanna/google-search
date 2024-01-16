@@ -109,7 +109,9 @@ func (doc *HTMLDoc) getH3s() chan *html.Node {
 		for x := range walk(doc.Root) {
 			if x.Type == html.ElementNode {
 				if x.Data == `h3` {
-					ch <- x
+					if getAttribute(x, "aria-hidden") == "" {
+						ch <- x
+					}
 				}
 			}
 		}
