@@ -9,6 +9,10 @@ import (
 	"golang.org/x/net/html"
 )
 
+const (
+	UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+)
+
 // ---------------------------------------------------------------------
 // Type Definitions
 // ---------------------------------------------------------------------
@@ -25,6 +29,11 @@ var (
 	// be overridden with another function pointer for unit testing
 	// purposes.
 	Downloader = func(url string) (string, error) {
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return "", err
+		}
+		req.Header.Set("User-Agent")
 		resp, err := http.Get(url)
 		if err != nil {
 			return "", err
