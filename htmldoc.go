@@ -30,16 +30,10 @@ var (
 	// be overridden with another function pointer for unit testing
 	// purposes.
 	Downloader = func(url string) (string, error) {
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			return "", err
-		}
+		req, _ := http.NewRequest("GET", url, nil)
 		req.Header.Set("User-Agent", UA)
 		client := new(http.Client)
-		resp, err := client.Do(req)
-		if err != nil {
-			return "", err
-		}
+		resp, _ := client.Do(req)
 		byteData, _ := io.ReadAll(resp.Body)
 		return string(byteData), nil
 	}
@@ -60,10 +54,7 @@ var (
 func Download(query string) (*HTMLDoc, error) {
 	url := GOOGLE_URL
 	url += urn.QueryEscape(query)
-	inputHTML, err := Downloader(url)
-	if err != nil {
-		return nil, err
-	}
+	inputHTML, _ := Downloader(url)
 	doc := NewHTMLDoc(inputHTML)
 	return doc, nil
 }
