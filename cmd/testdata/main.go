@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/philhanna/google_search"
+	"github.com/philhanna/google-search"
 	"golang.org/x/net/html"
 )
 
