@@ -28,7 +28,7 @@ func main() {
 		log.Fatal("No query specified")
 	}
 	query := flag.Arg(0)
-	doc, err := search.Download(query)
+	doc, err := search.Run(query)
 	if err != nil {
 		log.Fatal(err)
 	}

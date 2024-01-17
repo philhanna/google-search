@@ -171,7 +171,7 @@ func TestNewHTMLDoc(t *testing.T) {
 
 func TestDownload(t *testing.T) {
 	const query = `lichess ben finegold site:lichess.org`
-	doc, err := Download(query)
+	doc, err := Run(query)
 	assert.Nil(t, err)
 
 	filename := filepath.Join(os.TempDir(), "links.txt")

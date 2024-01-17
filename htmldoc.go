@@ -47,18 +47,6 @@ var (
 // Constuctors
 // ---------------------------------------------------------------------
 
-// Download accepts a query and passes it to Google search, and returns
-// the HTML created by Google.  The function that performs the HTTP Get
-// is pointed to by the Downloader variable, so it is possible to mock
-// it with an object that supplies HTML from a local source.
-func Download(query string) (*HTMLDoc, error) {
-	url := GOOGLE_URL
-	url += urn.QueryEscape(query)
-	inputHTML, _ := Downloader(url)
-	doc := NewHTMLDoc(inputHTML)
-	return doc, nil
-}
-
 // NewHTMLDoc creates a new HTML document with the specified HTML data,
 // parses it for links, and returns a pointer to it
 func NewHTMLDoc(input string) *HTMLDoc {
@@ -165,4 +153,16 @@ func walk(node *html.Node) chan *html.Node {
 		getDescendants(node, ch)
 	}(node)
 	return ch
+}
+
+// Run accepts a query and passes it to Google search, and returns
+// the HTML created by Google.  The function that performs the HTTP Get
+// is pointed to by the Downloader variable, so it is possible to mock
+// it with an object that supplies HTML from a local source.
+func Run(query string) (*HTMLDoc, error) {
+	url := GOOGLE_URL
+	url += urn.QueryEscape(query)
+	inputHTML, _ := Downloader(url)
+	doc := NewHTMLDoc(inputHTML)
+	return doc, nil
 }
