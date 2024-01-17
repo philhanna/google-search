@@ -20,7 +20,7 @@ const (
 
 type HTMLDoc struct {
 	HTML  string     // The HTML of the document
-	Links []Link     // The links that the parser finds
+	Links []Link     `json:"links,omitempty"` // The links that the parser finds
 	Root  *html.Node // Root of the parsed document tree
 }
 

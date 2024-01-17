@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -31,16 +32,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("[")
-	for i, link := range doc.Links {
-		comma := ","
-		if i == len(doc.Links)-1 {
-			comma = ""
-		}
-		fmt.Println("  {")
-		fmt.Printf("    %q:%q,\n", "title", link.Title)
-		fmt.Printf("    %q:%q\n", "url", link.URL)
-		fmt.Printf("  }%s\n", comma)
-	}
-	fmt.Println("]")
+	data, _ := json.MarshalIndent(doc.Links, "", "  ")
+	fmt.Println(string(data))
 }

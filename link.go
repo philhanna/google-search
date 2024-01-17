@@ -6,8 +6,8 @@ import (
 )
 
 type Link struct {
-	URL   string
-	Title string
+	URL   string `json:"url"`
+	Title string `json:"title"`
 }
 
 var (

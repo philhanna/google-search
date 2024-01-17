@@ -1,10 +1,21 @@
 package search
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func Test_marshall(t *testing.T) {
+	link := Link{
+		URL:   `www.example.com`,
+		Title: `Example`,
+	}
+	data, err := json.Marshal(link)
+	assert.Nil(t, err)
+	assert.Equal(t, `{"url":"www.example.com","title":"Example"}`, string(data))
+}
 
 func Test_makeLink(t *testing.T) {
 	tests := []struct {
