@@ -2,10 +2,7 @@ module github.com/philhanna/google-search
 
 go 1.21.6
 
-require (
-	github.com/philhanna/google_search v0.0.0-00010101000000-000000000000
-	github.com/stretchr/testify v1.8.4
-)
+require github.com/stretchr/testify v1.8.4
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
